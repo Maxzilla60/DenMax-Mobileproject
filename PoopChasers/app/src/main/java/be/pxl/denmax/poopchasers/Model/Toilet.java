@@ -1,5 +1,7 @@
 package be.pxl.denmax.poopchasers.Model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,8 +9,7 @@ import java.util.List;
 public class Toilet {
     private int id;
     private String name;
-    private double latitude;
-    private double longitude;
+    private LatLng latlng;
     private ToiletTags tags;
     private ToiletCommentsList comments;
 
@@ -19,8 +20,7 @@ public class Toilet {
     public Toilet(int id, String name, double latitude, double longitude, ToiletTags tags, ToiletCommentsList comments) {
         this.id = id;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latlng = new LatLng(latitude, longitude);
         this.tags = tags;
         this.comments = comments;
     }
@@ -32,8 +32,7 @@ public class Toilet {
     public Toilet(Toilet otherToilet, int id) {
         this.id = id;
         this.name = otherToilet.name;
-        this.latitude = otherToilet.latitude;
-        this.longitude = otherToilet.longitude;
+        this.latlng = new LatLng(otherToilet.latlng.latitude, otherToilet.latlng.longitude);
         this.tags = otherToilet.tags;
         this.comments = otherToilet.comments;
     }
@@ -71,6 +70,10 @@ public class Toilet {
         return id;
     }
 
+    public LatLng getLatLng(){
+        return this.latlng;
+    }
+
     /*public void setTags(ToiletTags tags) {
         this.tags = tags;
     }*/
@@ -83,4 +86,6 @@ public class Toilet {
     public List<ToiletComment> getComments() {
         return comments.getCommentsList();
     }
+
+
 }
