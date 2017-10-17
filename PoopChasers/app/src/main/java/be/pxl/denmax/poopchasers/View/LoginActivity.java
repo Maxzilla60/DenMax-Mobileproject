@@ -37,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Toast.makeText(getBaseContext(), username + " - " + password, Toast.LENGTH_LONG).show();
 
+        Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+        startActivity(intent);
+
 
         // TODO
     }
