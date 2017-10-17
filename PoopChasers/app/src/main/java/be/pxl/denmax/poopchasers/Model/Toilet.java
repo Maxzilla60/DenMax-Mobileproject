@@ -8,17 +8,28 @@ import java.util.List;
 
 // Class representing a Toilet (location)
 public class Toilet {
+    private int id;
     private String name;
     private Address location;
     private ToiletTags tags;
     private ToiletCommentsList comments;
 
     // Constructor
-    public Toilet(String name, Address location, int rating, ToiletTags tags, ToiletCommentsList comments) {
+    public Toilet(int id, String name, Address location, int rating, ToiletTags tags, ToiletCommentsList comments) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.tags = tags;
         this.comments = comments;
+    }
+
+    // Copy Constructor
+    public Toilet(Toilet otherToilet) {
+        this.id = otherToilet.id;
+        this.name = otherToilet.name;
+        this.location = otherToilet.location;
+        this.tags = otherToilet.tags;
+        this.comments = otherToilet.comments;
     }
 
     public void addTag(ToiletTag tag) {
@@ -58,14 +69,18 @@ public class Toilet {
         return tags.getTags();
     }
 
-    // Getting tags as a list
-    public List<ToiletTag> getTagsAsList() {
-        return tags.getTagsAsList();
+    public int getId() {
+        return id;
     }
 
     /*public void setTags(ToiletTags tags) {
         this.tags = tags;
     }*/
+
+    // Getting tags as a list
+    public List<ToiletTag> getTagsAsList() {
+        return tags.getTagsAsList();
+    }
 
     public List<ToiletComment> getComments() {
         return comments.getCommentsList();

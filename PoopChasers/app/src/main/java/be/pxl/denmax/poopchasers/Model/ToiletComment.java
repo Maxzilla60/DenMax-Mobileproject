@@ -3,7 +3,7 @@ package be.pxl.denmax.poopchasers.Model;
 import be.pxl.denmax.poopchasers.Exceptions.InvalidRatingException;
 
 // Class for representing a comment
-class ToiletComment {
+public class ToiletComment {
     private String content;
     private String username;
     private int rating;
