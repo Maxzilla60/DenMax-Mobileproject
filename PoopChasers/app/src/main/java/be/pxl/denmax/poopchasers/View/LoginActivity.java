@@ -1,4 +1,4 @@
-package be.pxl.denmax.poopchasers;
+package be.pxl.denmax.poopchasers.View;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -32,6 +32,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import be.pxl.denmax.poopchasers.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

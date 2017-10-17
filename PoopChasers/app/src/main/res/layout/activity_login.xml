@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="be.pxl.denmax.poopchasers.LoginActivity">
+    tools:context="be.pxl.denmax.poopchasers.View.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar

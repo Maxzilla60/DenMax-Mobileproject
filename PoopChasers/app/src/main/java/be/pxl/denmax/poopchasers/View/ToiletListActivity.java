@@ -1,4 +1,4 @@
-package be.pxl.denmax.poopchasers;
+package be.pxl.denmax.poopchasers.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.dummy.DummyContent;
 
 import java.util.List;

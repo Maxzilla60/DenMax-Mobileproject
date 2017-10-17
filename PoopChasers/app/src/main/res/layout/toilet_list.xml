@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="be.pxl.denmax.poopchasers.ToiletListActivity"
+    tools:context="be.pxl.denmax.poopchasers.View.ToiletListActivity"
     tools:listitem="@layout/toilet_list_content" />
