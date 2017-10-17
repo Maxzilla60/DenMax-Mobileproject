@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import be.pxl.denmax.poopchasers.R;
 
@@ -33,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
 
         String username = nameEdit.getText().toString();
         String password = passEdit.getText().toString();
+
+        Toast.makeText(getBaseContext(), username + " - " + password, Toast.LENGTH_LONG).show();
+
 
         // TODO
     }
