@@ -1,33 +1,39 @@
 package be.pxl.denmax.poopchasers.Model;
 
-import android.location.Address;
-
 import java.util.HashMap;
 import java.util.List;
-
 
 // Class representing a Toilet (location)
 public class Toilet {
     private int id;
     private String name;
-    private Address location;
+    private double latitude;
+    private double longitude;
     private ToiletTags tags;
     private ToiletCommentsList comments;
 
     // Constructor
-    public Toilet(int id, String name, Address location, int rating, ToiletTags tags, ToiletCommentsList comments) {
+    public Toilet(int id, String name, double latitude, double longitude) {
+        this(id, name, latitude, longitude, new ToiletTags(), new ToiletCommentsList());
+    }
+    public Toilet(int id, String name, double latitude, double longitude, ToiletTags tags, ToiletCommentsList comments) {
         this.id = id;
         this.name = name;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.tags = tags;
         this.comments = comments;
     }
 
     // Copy Constructor
     public Toilet(Toilet otherToilet) {
-        this.id = otherToilet.id;
+        this(otherToilet, otherToilet.getId());
+    }
+    public Toilet(Toilet otherToilet, int id) {
+        this.id = id;
         this.name = otherToilet.name;
-        this.location = otherToilet.location;
+        this.latitude = otherToilet.latitude;
+        this.longitude = otherToilet.longitude;
         this.tags = otherToilet.tags;
         this.comments = otherToilet.comments;
     }
@@ -50,14 +56,6 @@ public class Toilet {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Address getLocation() {
-        return location;
-    }
-
-    public void setLocation(Address location) {
-        this.location = location;
     }
 
     // Rating will be dynamically calculated

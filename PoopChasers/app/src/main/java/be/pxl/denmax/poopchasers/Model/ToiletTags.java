@@ -10,11 +10,14 @@ class ToiletTags {
     private HashMap<ToiletTag, Boolean> tags;
 
     // Construct by passing ToiletTags
-    public ToiletTags(ToiletTag... ctags) {
+    public ToiletTags() {
         tags = new HashMap<ToiletTag, Boolean>();
         for (ToiletTag tagKey : ToiletTag.values()) {
             tags.put(tagKey, false);
         }
+    }
+    public ToiletTags(ToiletTag... ctags) {
+        this();
         for (ToiletTag ctagKey : ctags) {
             tags.put(ctagKey, true);
         }
