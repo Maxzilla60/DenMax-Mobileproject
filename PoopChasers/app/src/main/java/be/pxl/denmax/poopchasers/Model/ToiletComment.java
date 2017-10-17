@@ -2,15 +2,13 @@ package be.pxl.denmax.poopchasers.Model;
 
 import be.pxl.denmax.poopchasers.Exceptions.InvalidRatingException;
 
-/**
- * Created by 11502759 on 17/10/2017.
- */
-
+// Class for representing a comment
 class ToiletComment {
     private String content;
     private String username;
     private int rating;
 
+    // Constructor
     public ToiletComment(String content, String username, int rating) throws InvalidRatingException {
         this.content = content;
         this.username = username;
@@ -20,6 +18,7 @@ class ToiletComment {
         this.rating = rating;
     }
 
+    // Getters:
     public String getContent() {
         return content;
     }

@@ -1,9 +1,6 @@
 package be.pxl.denmax.poopchasers.Model;
 
-/**
- * Created by 11502759 on 17/10/2017.
- */
-
+// A toiletlocation can be tagged with the following:
 enum ToiletTag {
     MENS, WOMENS, BABIES, FREE, ACCESSABLE, UNISEX
 }

@@ -2,19 +2,18 @@ package be.pxl.denmax.poopchasers.Model;
 
 import android.location.Address;
 
-import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by 11502759 on 17/10/2017.
- */
 
+// Class representing a Toilet (location)
 public class Toilet {
     private String name;
     private Address location;
     private ToiletTags tags;
     private ToiletCommentsList comments;
 
+    // Constructor
     public Toilet(String name, Address location, int rating, ToiletTags tags, ToiletCommentsList comments) {
         this.name = name;
         this.location = location;
@@ -22,6 +21,18 @@ public class Toilet {
         this.comments = comments;
     }
 
+    public void addTag(ToiletTag tag) {
+        tags.addTag(tag);
+    }
+    public void removeTag(ToiletTag tag) {
+        tags.removeTag(tag);
+    }
+
+    public void addComment (ToiletComment comment) {
+        comments.add(comment);
+    }
+
+    // Getters & Setters:
     public String getName() {
         return name;
     }
@@ -38,23 +49,25 @@ public class Toilet {
         this.location = location;
     }
 
+    // Rating will be dynamically calculated
     public int getRating() {
-        return comments.getAvarageRating();
+        return comments.getAverageRating();
     }
 
-    public ToiletTags getTags() {
-        return tags;
+    public HashMap<ToiletTag, Boolean> getTags() {
+        return tags.getTags();
     }
 
-    public void setTags(ToiletTags tags) {
+    // Getting tags as a list
+    public List<ToiletTag> getTagsAsList() {
+        return tags.getTagsAsList();
+    }
+
+    /*public void setTags(ToiletTags tags) {
         this.tags = tags;
-    }
+    }*/
 
-    public ToiletCommentsList getComments() {
-        return comments;
-    }
-
-    public void addComment (ToiletComment comment) {
-        comments.add(comment);
+    public List<ToiletComment> getComments() {
+        return comments.getCommentsList();
     }
 }
