@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="star_width">30dp</dimen>
+    <dimen name="star_heigth">30dp</dimen>
+    <dimen name="star_margin">3dp</dimen>
+</resources>

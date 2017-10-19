@@ -2,6 +2,7 @@ package be.pxl.denmax.poopchasers.View;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,17 +13,28 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import be.pxl.denmax.poopchasers.R;
+import java.util.List;
+import java.util.Random;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import be.pxl.denmax.poopchasers.Model.Toilet;
+import be.pxl.denmax.poopchasers.R;
+import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
+        OnMarkerClickListener {
 
     private GoogleMap mMap;
 
@@ -48,6 +60,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    public void centerMapOnLocation(Location location){
+        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
+    }
+
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+//        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        initLocationListener();
+
+        mMap.setOnMarkerClickListener(this);
+        addToiletsToMap();
     }
 
     private void initLocationListener() {
@@ -88,32 +132,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void centerMapOnLocation(Location location){
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
+    private void addToiletsToMap(){
+        List<Toilet> toiletList = ToiletRepository.getAllToiletLocations();
+        for (Toilet toilet: toiletList) {
+            Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
+            marker.setTag(toilet.getId());
+        }
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        initLocationListener();
+    public boolean onMarkerClick(Marker marker) {
+        Intent intent = new Intent(getBaseContext(), ToiletDetailActivity.class);
+        intent.putExtra("id", (int) marker.getTag());
+        startActivity(intent);
+        return true;
     }
 }

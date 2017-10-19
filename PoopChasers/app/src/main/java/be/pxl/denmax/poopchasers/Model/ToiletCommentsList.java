@@ -18,7 +18,7 @@ class ToiletCommentsList {
         for (ToiletComment comment : commentsList) {
             a += comment.getRating();
         }
-        return (a / commentsList.size());
+        return (Math.round((float) a / commentsList.size()));
     }
 
     // Adding a comment
