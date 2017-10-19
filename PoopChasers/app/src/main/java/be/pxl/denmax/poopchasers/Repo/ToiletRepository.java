@@ -43,4 +43,17 @@ public class ToiletRepository {
     public static void addToiletLocation(Toilet toilet) {
         toiletLocations.add(new Toilet(toilet, idIncrementer++));
     }
+
+    public static List<Toilet> getToiletLocationsByTags(ToiletTag... queryTags) {
+        List<Toilet> filteredLocations = new ArrayList<Toilet>();
+        for (Toilet location : toiletLocations) {
+            for (ToiletTag query : queryTags) {
+                if (location.hasTag(query)) {
+                    filteredLocations.add(new Toilet(location));
+                    break;
+                }
+            }
+        }
+        return filteredLocations;
+    }
 }

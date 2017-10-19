@@ -43,6 +43,9 @@ public class Toilet {
     public void removeTag(ToiletTag tag) {
         tags.removeTag(tag);
     }
+    public boolean hasTag(ToiletTag tag) {
+        return tags.hasTag(tag);
+    }
 
     public void addComment (ToiletComment comment) {
         comments.add(comment);

@@ -33,6 +33,11 @@ class ToiletTags {
         tags.put(removedTag, false);
     }
 
+    // Checking for containing a tag
+    public boolean hasTag(ToiletTag queryTag) {
+        return tags.get(queryTag).booleanValue();
+    }
+
     // Get all tags (that are set to true) as a nice list
     public List<ToiletTag> getTagsAsList() {
         List<ToiletTag> list = new ArrayList<ToiletTag>();
