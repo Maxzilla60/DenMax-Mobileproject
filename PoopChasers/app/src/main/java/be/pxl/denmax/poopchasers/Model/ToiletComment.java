@@ -1,7 +1,5 @@
 package be.pxl.denmax.poopchasers.Model;
 
-import be.pxl.denmax.poopchasers.Exceptions.InvalidRatingException;
-
 // Class for representing a comment
 public class ToiletComment {
     private String content;
@@ -9,11 +7,14 @@ public class ToiletComment {
     private int rating;
 
     // Constructor
-    public ToiletComment(String content, String username, int rating) throws InvalidRatingException {
+    public ToiletComment(String content, String username, int rating) {
         this.content = content;
         this.username = username;
-        if (rating > 5 || rating < 1) {
-            throw new InvalidRatingException();
+        if (rating > 5) {
+            rating = 5;
+        }
+        else if (rating < 1) {
+            rating = 1;
         }
         this.rating = rating;
     }
