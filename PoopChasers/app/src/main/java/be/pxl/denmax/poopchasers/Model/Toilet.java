@@ -37,8 +37,10 @@ public class Toilet {
         this.comments = otherToilet.comments;
     }
 
-    public void addTag(ToiletTag tag) {
-        tags.addTag(tag);
+    public void addTags(ToiletTag... newTags) {
+        for (ToiletTag tag : newTags) {
+            tags.addTag(tag);
+        }
     }
     public void removeTag(ToiletTag tag) {
         tags.removeTag(tag);

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.pxl.denmax.poopchasers.Exceptions.ToiletLocationIDNotFoundException;
-import be.pxl.denmax.poopchasers.Model.*;
+import be.pxl.denmax.poopchasers.Model.Toilet;
+import be.pxl.denmax.poopchasers.Model.ToiletComment;
+import be.pxl.denmax.poopchasers.Model.ToiletTag;
+
+import static be.pxl.denmax.poopchasers.Model.ToiletTag.*;
 
 public class ToiletRepository {
     private static List<Toilet> toiletLocations;
@@ -16,7 +20,13 @@ public class ToiletRepository {
         toiletLocations.add(new Toilet(idIncrementer++, "Daar", 5,4));
         toiletLocations.add(new Toilet(idIncrementer++, "Overal", 50.953270,5.353262));
         toiletLocations.add(new Toilet(idIncrementer++, "Stink Twalet", 50.9382132,5.3461862));
-        toiletLocations.add(new Toilet(idIncrementer++, "Dennis' Badkamer Emporium", 50.883887,5.2205358));
+        toiletLocations.add(new Toilet(idIncrementer++, "Dennis' Badkamer Emporium", 50.771984,5.4604808));
+        Toilet quick = new Toilet(idIncrementer++, "Quick", 50.9303555,5.3692793);
+        quick.addComment(new ToiletComment("Wauw, lekker eten en lekker kakken!", "JefDeVoetballer", 2000));
+        quick.addComment(new ToiletComment("Het stinkt naar de frieten.", "Els_DikkeKont", -15));
+        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 4));
+        quick.addTags(FREE, MENS, WOMENS);
+        toiletLocations.add(quick);
     }
 
     private ToiletRepository() {
