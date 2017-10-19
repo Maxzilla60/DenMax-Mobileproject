@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 // Class for keeping a nice hashmap of all available tags
-class ToiletTags {
+public class ToiletTags {
     private HashMap<ToiletTag, Boolean> tags;
 
     // Construct by passing ToiletTags

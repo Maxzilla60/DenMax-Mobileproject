@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Class for keeping a list of comments
-class ToiletCommentsList {
+public class ToiletCommentsList {
     private List<ToiletComment> commentsList;
 
     // Constructor
