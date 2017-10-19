@@ -4,6 +4,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,12 +53,21 @@ public class ToiletDetailActivity extends AppCompatActivity {
         try {
             TextView locationName = (TextView) findViewById(R.id.locationNameTextView);
 
+            // Create a geocoder to get the address associated with the coordinates
             Geocoder gc = new Geocoder(this, Locale.getDefault());
             LatLng latLng = toilet.getLatLng();
             List<Address> addressList = gc.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
             if(addressList.size() > 0) {
-                locationName.setText(addressList.get(0).getAddressLine(0).toString());
+                StringBuilder sb = new StringBuilder();
+
+                String addrLine;
+                int i = 0;
+                while ((addrLine = addressList.get(0).getAddressLine(i)) != null){ // Build the complete address
+                    sb.append(addrLine.toString());
+                    i++;
+                }
+                locationName.setText(sb.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,6 +86,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
 
         LinearLayout starLayout = (LinearLayout) findViewById(R.id.starLayout);
 
+        // add full stars
         for(int i = 0; i<rating; i++) {
             ImageView starImage = new ImageView(this);
             starImage.setLayoutParams(layout);
@@ -83,7 +94,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
 
             starLayout.addView(starImage);
         }
-
+        // add empty stars
         for(int i = 5; i>rating; i--) {
             ImageView starImage = new ImageView(this);
             starImage.setLayoutParams(layout);
