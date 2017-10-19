@@ -1,0 +1,4 @@
+Blauw: #2980B9
+Lichtblauw: #33CCCC
+"Wit": #ECF0F1
+Grijs: #95989A
