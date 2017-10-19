@@ -14,6 +14,10 @@ class ToiletCommentsList {
 
     // Dynamically calculates average rating
     public int getAverageRating() {
+        if (commentsList.size() <= 0) {
+        	return 0;
+        }
+        
         int a = 0;
         for (ToiletComment comment : commentsList) {
             a += comment.getRating();
