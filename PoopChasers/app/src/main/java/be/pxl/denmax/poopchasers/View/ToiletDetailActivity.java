@@ -4,6 +4,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import java.util.Locale;
 
 import be.pxl.denmax.poopchasers.Exceptions.ToiletLocationIDNotFoundException;
 import be.pxl.denmax.poopchasers.Model.Toilet;
+import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
 
@@ -65,6 +67,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
     private void setStars(Toilet toilet) {
         int rating = toilet.getRating();
 
+        // create basic layout for every starimage
         int starWidth = (int) getResources().getDimension(R.dimen.star_width);
         int starHeigth = (int) getResources().getDimension(R.dimen.star_heigth);
         int starMargin = (int) getResources().getDimension(R.dimen.star_margin);
@@ -91,6 +94,25 @@ public class ToiletDetailActivity extends AppCompatActivity {
     }
 
     private void setTags(Toilet toilet){
+        List<ToiletTag> toiletTags = toilet.getTagsAsList();
 
+        if(toiletTags.contains(ToiletTag.ACCESSABLE)){
+            findViewById(R.id.wheelchairImageView).setVisibility(View.VISIBLE);
+        }
+        if(toiletTags.contains(ToiletTag.BABIES)){
+            findViewById(R.id.babyImageView).setVisibility(View.VISIBLE);
+        }
+        if(toiletTags.contains(ToiletTag.FREE)){
+            findViewById(R.id.freeImageView).setVisibility(View.VISIBLE);
+        }
+        if(toiletTags.contains(ToiletTag.MENS)){
+            findViewById(R.id.manImageView).setVisibility(View.VISIBLE);
+        }
+        if(toiletTags.contains(ToiletTag.UNISEX)){
+            findViewById(R.id.unisexImageView).setVisibility(View.VISIBLE);
+        }
+        if(toiletTags.contains(ToiletTag.WOMENS)){
+            findViewById(R.id.womanImageView).setVisibility(View.VISIBLE);
+        }
     }
 }
