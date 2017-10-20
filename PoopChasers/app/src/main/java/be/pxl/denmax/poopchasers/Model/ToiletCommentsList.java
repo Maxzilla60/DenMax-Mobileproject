@@ -5,7 +5,7 @@ import java.util.List;
 
 // Class for keeping a list of comments
 public class ToiletCommentsList {
-    private List<ToiletComment> commentsList;
+    private ArrayList<ToiletComment> commentsList;
 
     // Constructor
     public ToiletCommentsList() {
@@ -22,7 +22,7 @@ public class ToiletCommentsList {
         for (ToiletComment comment : commentsList) {
             a += comment.getRating();
         }
-        return (Math.round((float) a / commentsList.size()));
+        return (Math.round((float) a / (float) commentsList.size()));
     }
 
     // Adding a comment
@@ -30,7 +30,7 @@ public class ToiletCommentsList {
         commentsList.add(comment);
     }
 
-    public List<ToiletComment> getCommentsList() {
+    public ArrayList<ToiletComment> getCommentsList() {
         return commentsList;
     }
 }

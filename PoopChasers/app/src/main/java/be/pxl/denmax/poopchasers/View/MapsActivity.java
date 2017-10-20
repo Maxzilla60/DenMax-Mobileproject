@@ -13,8 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,11 +24,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
-import java.util.Random;
 
 import be.pxl.denmax.poopchasers.Model.Toilet;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+import be.pxl.denmax.poopchasers.View.ToiletDetail.ToiletDetailActivity;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,

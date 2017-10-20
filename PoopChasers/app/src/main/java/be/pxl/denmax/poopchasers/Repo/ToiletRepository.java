@@ -23,8 +23,11 @@ public class ToiletRepository {
         toiletLocations.add(new Toilet(idIncrementer++, "Dennis' Badkamer Emporium", 50.771984,5.4604808));
         Toilet quick = new Toilet(idIncrementer++, "Quick", 50.9303555,5.3692793);
         quick.addComment(new ToiletComment("Wauw, lekker eten en lekker kakken!", "JefDeVoetballer", 2000));
-        quick.addComment(new ToiletComment("Het stinkt naar de frieten.", "Els_DikkeKont", -15));
-        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 4));
+        quick.addComment(new ToiletComment("Het stinkt naar de frieten.", "Els_DikkeKont", 3));
+        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 5));
+        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 4));
+        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 5));
+        quick.addComment(new ToiletComment("Ik kom zeker nog eens langs. De zeep die ze hier hebben voor m'n handen te wassen ruikt lekker.", "PowerFlower2354", 5));
         quick.addTags(FREE, MENS, WOMENS);
         toiletLocations.add(quick);
     }

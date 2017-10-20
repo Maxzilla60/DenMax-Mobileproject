@@ -2,6 +2,7 @@ package be.pxl.denmax.poopchasers.Model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class Toilet {
         return tags.getTagsAsList();
     }
 
-    public List<ToiletComment> getComments() {
+    public ArrayList<ToiletComment> getComments() {
         return comments.getCommentsList();
     }
 

@@ -39,7 +39,7 @@
         <activity
             android:name=".View.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".View.ToiletDetailActivity"></activity>
+        <activity android:name=".View.ToiletDetail.ToiletDetailActivity"></activity>
     </application>
 
 </manifest>

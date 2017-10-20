@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:id="@+id/profileLayout">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:maxWidth="75dp"
+            android:text="Dennis Heperol"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:maxHeight="20dp"
+                android:maxWidth="20dp"
+                android:src="@drawable/filter" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:id="@+id/starLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true">
+
+
+                <ImageView
+                    android:id="@+id/star1"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:maxHeight="20dp"
+                    android:maxWidth="20dp"
+                    android:src="@drawable/starfull" />
+
+                <ImageView
+                    android:id="@+id/star2"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starfull" />
+
+                <ImageView
+                    android:id="@+id/star3"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starfull" />
+
+                <ImageView
+                    android:id="@+id/star4"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starfull" />
+
+                <ImageView
+                    android:id="@+id/star5"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starfull" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/starLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starempty" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starempty" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starempty" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starempty" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/starempty" />
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/profileLayout"
+        android:maxLines="4"
+        android:padding="5dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in rutrum dolor, ac ullamcorper velit. Aliquam blandit dolor in dolor scelerisque pharetra. Etiam accumsan ipsum lacus, a malesuada felis tincidunt eget. Curabitur quis libero vitae risus congue accumsan laoreet vel dui. Vivamus commodo ante non vestibulum efficitur." />
+
+    <TextView
+        android:id="@+id/moreless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/comment"
+        android:text="show more"
+        android:textColor="@color/colorBlue" />
+
+
+</RelativeLayout>
