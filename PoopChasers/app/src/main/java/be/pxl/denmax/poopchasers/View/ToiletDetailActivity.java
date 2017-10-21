@@ -4,7 +4,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -107,7 +106,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
     private void setTags(Toilet toilet){
         List<ToiletTag> toiletTags = toilet.getTagsAsList();
 
-        if(toiletTags.contains(ToiletTag.ACCESSABLE)){
+        if(toiletTags.contains(ToiletTag.ACCESSIBLE)){
             findViewById(R.id.wheelchairImageView).setVisibility(View.VISIBLE);
         }
         if(toiletTags.contains(ToiletTag.BABIES)){

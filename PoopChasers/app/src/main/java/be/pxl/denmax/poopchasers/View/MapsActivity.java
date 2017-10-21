@@ -13,31 +13,37 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import be.pxl.denmax.poopchasers.Model.Toilet;
+import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
 import be.pxl.denmax.poopchasers.View.ToiletDetail.ToiletDetailActivity;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
-        OnMarkerClickListener {
+        OnMarkerClickListener,
+        FilterDialog.FilterDialogListener{
 
     private GoogleMap mMap;
-
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private ArrayList<ToiletTag> filterTags;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -59,12 +65,21 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        filterTags = (ArrayList<ToiletTag>) getIntent().getSerializableExtra("filter");
     }
 
     public void centerMapOnLocation(Location location){
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
+    }
+
+    public void filtertest(View view) {
+        FilterDialog dialog = new FilterDialog();
+        Bundle args = new Bundle();
+        args.putSerializable("filter", filterTags);
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), "");
     }
 
 
@@ -90,14 +105,16 @@ public class MapsActivity extends FragmentActivity implements
         initLocationListener();
 
         mMap.setOnMarkerClickListener(this);
-        addToiletsToMap();
+        placeToiletsOnMap();
     }
 
+    /**
+     * initializes a locationlistener
+     */
     private void initLocationListener() {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                //centerMapOnLocation(location);
             }
 
             @Override
@@ -116,8 +133,10 @@ public class MapsActivity extends FragmentActivity implements
             }
         };
 
+        // Check if we have permission to get the device's location
         if(Build.VERSION.SDK_INT < 23) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+            mMap.setMyLocationEnabled(true);
         } else {
 
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -125,26 +144,55 @@ public class MapsActivity extends FragmentActivity implements
 
                 Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 centerMapOnLocation(lastKnownLoc);
+                mMap.setMyLocationEnabled(true);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
     }
 
+    /**
+     * Places all toilets on the map based on filter settings
+     */
+    private void placeToiletsOnMap(){
+        List<Toilet> toiletList;
+        if(!hasFilter()) {
+            toiletList = ToiletRepository.getAllToiletLocations();
+        } else {
+            toiletList = ToiletRepository.getToiletLocationsByTags(filterTags.toArray(new ToiletTag[0]));
+        }
 
-    private void addToiletsToMap(){
-        List<Toilet> toiletList = ToiletRepository.getAllToiletLocations();
+        mMap.clear();
         for (Toilet toilet: toiletList) {
             Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
             marker.setTag(toilet.getId());
         }
     }
 
+    /**
+     * True if there is a filter that needs to be applied
+     * @return
+     */
+    private boolean hasFilter(){
+        return filterTags != null && filterTags.size() > 0;
+    }
+
+    /**
+     * When clicked on a marker open the detail page
+     * @param marker
+     * @return
+     */
     @Override
     public boolean onMarkerClick(Marker marker) {
         Intent intent = new Intent(getBaseContext(), ToiletDetailActivity.class);
         intent.putExtra("id", (int) marker.getTag());
         startActivity(intent);
         return true;
+    }
+
+    @Override
+    public void onPositiveFilterDialogClick(ArrayList<ToiletTag> filterTags) {
+        this.filterTags = filterTags;
+        placeToiletsOnMap();
     }
 }

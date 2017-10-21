@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PoopChasers</string>
     <string name="title_activity_maps">Map</string>
+    <string name="filter">Filter</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
