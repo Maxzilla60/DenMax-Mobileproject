@@ -1,7 +1,9 @@
 package be.pxl.denmax.poopchasers.View.ToiletDetail;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -24,9 +27,8 @@ import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
 
-public class ToiletDetailActivity extends AppCompatActivity {
 
-    private static CustomAdapter adapter;
+public class ToiletDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
             setLocationName(toilet);
             setStars(toilet);
             setTags(toilet);
+            setDirections(toilet);
             setComments(toilet.getComments());
 
 
@@ -49,8 +52,30 @@ public class ToiletDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void setDirections(Toilet toilet) {
+        final Toilet t = toilet;
+
+        findViewById(R.id.directionsButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LatLng latLng = t.getLatLng();
+
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude+"&mode=w");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                // Check if intent can be resolved
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(getBaseContext(), "Could not find Google Maps application", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
     private void setComments(ArrayList<ToiletComment> comments) {
-        adapter = new CustomAdapter(comments, getApplicationContext());
+        CustomAdapter adapter = new CustomAdapter(comments, getApplicationContext());
         ListView listView = (ListView) findViewById(R.id.comments);
 
         listView.setAdapter(adapter);
@@ -76,7 +101,7 @@ public class ToiletDetailActivity extends AppCompatActivity {
                 String addrLine;
                 int i = 0;
                 while ((addrLine = addressList.get(0).getAddressLine(i)) != null){ // Build the complete address
-                    sb.append(addrLine.toString());
+                    sb.append(addrLine);
                     i++;
                 }
                 locationName.setText(sb.toString());
