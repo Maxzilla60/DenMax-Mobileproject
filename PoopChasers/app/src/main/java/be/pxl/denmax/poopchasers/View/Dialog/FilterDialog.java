@@ -1,4 +1,4 @@
-package be.pxl.denmax.poopchasers.View;
+package be.pxl.denmax.poopchasers.View.Dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -67,12 +67,7 @@ public class FilterDialog extends DialogFragment {
                         listener.onPositiveFilterDialogClick(getToiletTags(view));
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.i("dialog", "cancel");
-                    }
-                });
+                .setNegativeButton(R.string.cancel, null);
 
         if(filterTags != null){
             initFilters(view);
