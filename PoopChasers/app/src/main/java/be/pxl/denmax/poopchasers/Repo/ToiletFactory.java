@@ -17,23 +17,28 @@ public class ToiletFactory {
         return new Toilet(id, name, latlng.latitude, latlng.longitude, tags, comments);
     }
 
-    public void setId(int id) {
+    public ToiletFactory setId(int id) {
         this.id = id;
+        return this;
     }
 
-    public void setName(String name) {
+    public ToiletFactory setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setLatlng(LatLng latlng) {
+    public ToiletFactory setLatlng(LatLng latlng) {
         this.latlng = latlng;
+        return this;
     }
 
-    public void setTags(ToiletTags tags) {
+    public ToiletFactory setTags(ToiletTags tags) {
         this.tags = tags;
+        return this;
     }
 
-    public void setComments(ToiletCommentsList comments) {
+    public ToiletFactory setComments(ToiletCommentsList comments) {
         this.comments = comments;
+        return this;
     }
 }

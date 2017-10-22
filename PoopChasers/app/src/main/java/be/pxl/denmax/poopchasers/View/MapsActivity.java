@@ -15,12 +15,15 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,16 +35,21 @@ import be.pxl.denmax.poopchasers.Model.Toilet;
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+import be.pxl.denmax.poopchasers.View.Dialog.AddToiletDialog;
+import be.pxl.denmax.poopchasers.View.Dialog.FilterDialog;
 import be.pxl.denmax.poopchasers.View.ToiletDetail.ToiletDetailActivity;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         OnMarkerClickListener,
-        FilterDialog.FilterDialogListener{
+        FilterDialog.FilterDialogListener,
+        AddToiletDialog.AddToiletListener {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private static final int ADD_TOILET_REQUEST = 1;
 
     private ArrayList<ToiletTag> filterTags;
 
@@ -67,6 +75,11 @@ public class MapsActivity extends FragmentActivity implements
         mapFragment.getMapAsync(this);
 
         filterTags = (ArrayList<ToiletTag>) getIntent().getSerializableExtra("filter");
+
+        String action = getIntent() != null ? getIntent().getAction() : null;
+        if ("ADD_TOILET".equals(action)) {
+            filtertest(null);
+        }
     }
 
     public void centerMapOnLocation(Location location){
@@ -74,7 +87,17 @@ public class MapsActivity extends FragmentActivity implements
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
     }
 
-    public void filtertest(View view) {
+    public void filtertest(View view){
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this), ADD_TOILET_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onFilterClick(View view) {
         FilterDialog dialog = new FilterDialog();
         Bundle args = new Bundle();
         args.putSerializable("filter", filterTags);
@@ -171,7 +194,7 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * True if there is a filter that needs to be applied
-     * @return
+     * @return true if there is a filter
      */
     private boolean hasFilter(){
         return filterTags != null && filterTags.size() > 0;
@@ -179,8 +202,8 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * When clicked on a marker open the detail page
-     * @param marker
-     * @return
+     * @param marker the marker
+     * @return always true
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -194,5 +217,26 @@ public class MapsActivity extends FragmentActivity implements
     public void onPositiveFilterDialogClick(ArrayList<ToiletTag> filterTags) {
         this.filterTags = filterTags;
         placeToiletsOnMap();
+    }
+
+    @Override
+    public void onPositiveAddToiletClick(Toilet toilet) {
+        ToiletRepository.addToiletLocation(toilet);
+        placeToiletsOnMap();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == ADD_TOILET_REQUEST){
+            if(resultCode == RESULT_OK){
+                Place place = PlacePicker.getPlace(this, data);
+
+                AddToiletDialog dialog = new AddToiletDialog();
+                Bundle args = new Bundle();
+                args.putParcelable("latLng", place.getLatLng());
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "");
+            }
+        }
     }
 }

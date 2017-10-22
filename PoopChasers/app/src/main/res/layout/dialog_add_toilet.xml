@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/toiletNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="Toilet name"
+        android:inputType="textPersonName" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/manButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/man" />
+
+            <ImageButton
+                android:id="@+id/womanButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/woman" />
+
+            <ImageButton
+                android:id="@+id/unisexButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/unisex" />
+
+            <ImageButton
+                android:id="@+id/babyButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/baby" />
+
+            <ImageButton
+                android:id="@+id/wheelchairButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/wheelchair" />
+
+            <ImageButton
+                android:id="@+id/freeButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/free" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>
