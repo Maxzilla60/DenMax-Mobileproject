@@ -7,24 +7,25 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:maxWidth="75dp"
+        android:text="Dennis Heperol"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:id="@+id/profileLayout">
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:maxWidth="75dp"
-            android:text="Dennis Heperol"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+        android:id="@+id/profileLayout"
+        android:layout_below="@+id/name"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -89,42 +90,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/starLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/starempty" />
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/starempty" />
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/starempty" />
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/starempty" />
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/starempty" />
-
-
-
-            </LinearLayout>
-
         </RelativeLayout>
 
 
@@ -134,11 +99,11 @@
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/profileLayout"
         android:maxLines="4"
         android:padding="5dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in rutrum dolor, ac ullamcorper velit. Aliquam blandit dolor in dolor scelerisque pharetra. Etiam accumsan ipsum lacus, a malesuada felis tincidunt eget. Curabitur quis libero vitae risus congue accumsan laoreet vel dui. Vivamus commodo ante non vestibulum efficitur." />
+        android:layout_below="@+id/name"
+        android:layout_toRightOf="@+id/profileLayout"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/moreless"

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,9 +27,12 @@ import be.pxl.denmax.poopchasers.Model.ToiletComment;
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+import be.pxl.denmax.poopchasers.View.Dialog.CommentDialog;
 
 
-public class ToiletDetailActivity extends AppCompatActivity {
+public class ToiletDetailActivity extends AppCompatActivity implements CommentDialog.CommentListener{
+    private Toilet toilet;
+    private ArrayList<ImageView> starImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +40,23 @@ public class ToiletDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_toilet_detail);
 
         int id = getIntent().getIntExtra("id", 0);
+        starImages = new ArrayList<>();
+
+        starImages.add((ImageView) findViewById(R.id.star1));
+        starImages.add((ImageView) findViewById(R.id.star2));
+        starImages.add((ImageView) findViewById(R.id.star3));
+        starImages.add((ImageView) findViewById(R.id.star4));
+        starImages.add((ImageView) findViewById(R.id.star5));
+
 
         try {
-            Toilet toilet = ToiletRepository.getToiletLocationByID(id);
-            setToiletName(toilet);
-            setLocationName(toilet);
-            setStars(toilet);
-            setTags(toilet);
-            setDirections(toilet);
+            toilet = ToiletRepository.getToiletLocationByID(id);
+            setToiletName();
+            setLocationName();
+            setStars();
+            setTags();
+            setDirections();
+            setAddComment();
             setComments(toilet.getComments());
 
 
@@ -52,7 +65,17 @@ public class ToiletDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setDirections(Toilet toilet) {
+    private void setAddComment() {
+        findViewById(R.id.addCommentButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommentDialog dialog = new CommentDialog();
+                dialog.show(getFragmentManager(), "");
+            }
+        });
+    }
+
+    private void setDirections() {
         final Toilet t = toilet;
 
         findViewById(R.id.directionsButton).setOnClickListener(new View.OnClickListener() {
@@ -81,12 +104,12 @@ public class ToiletDetailActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    private void setToiletName(Toilet toilet){
+    private void setToiletName(){
         TextView toiletName = (TextView) findViewById(R.id.toiletNameTextView);
         toiletName.setText(toilet.getName());
     }
 
-    private void setLocationName(Toilet toilet){
+    private void setLocationName(){
         try {
             TextView locationName = (TextView) findViewById(R.id.locationNameTextView);
 
@@ -111,37 +134,19 @@ public class ToiletDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setStars(Toilet toilet) {
+    private void setStars() {
         int rating = toilet.getRating();
 
-        // create basic layout for every starimage
-        int starWidth = (int) getResources().getDimension(R.dimen.star_width);
-        int starHeigth = (int) getResources().getDimension(R.dimen.star_heigth);
-        int starMargin = (int) getResources().getDimension(R.dimen.star_margin);
-        LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(starWidth, starHeigth);
-        layout.setMargins(starMargin, 0, starMargin, 0);
-
-        LinearLayout starLayout = (LinearLayout) findViewById(R.id.starLayout);
-
-        // add full stars
-        for(int i = 0; i<rating; i++) {
-            ImageView starImage = new ImageView(this);
-            starImage.setLayoutParams(layout);
-            starImage.setImageResource(R.drawable.starfull);
-
-            starLayout.addView(starImage);
+        for(int i = 1; i<=rating; i++){
+            starImages.get(i-1).setImageResource(R.drawable.starfull);
         }
-        // add empty stars
-        for(int i = 5; i>rating; i--) {
-            ImageView starImage = new ImageView(this);
-            starImage.setLayoutParams(layout);
-            starImage.setImageResource(R.drawable.starempty);
 
-            starLayout.addView(starImage);
+        for(int i = 5; i>rating; i--){
+            starImages.get(i-1).setImageResource(R.drawable.starempty);
         }
     }
 
-    private void setTags(Toilet toilet){
+    private void setTags(){
         List<ToiletTag> toiletTags = toilet.getTagsAsList();
 
         if(toiletTags.contains(ToiletTag.ACCESSIBLE)){
@@ -161,6 +166,18 @@ public class ToiletDetailActivity extends AppCompatActivity {
         }
         if(toiletTags.contains(ToiletTag.WOMENS)){
             findViewById(R.id.womanImageView).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onPositiveCommentClick(ToiletComment comment) {
+        try {
+            ToiletRepository.addCommentToToiletLocation(comment, toilet.getId());
+            setComments(toilet.getComments());
+            setStars();
+        } catch (ToiletLocationIDNotFoundException e) {
+            Toast.makeText(getBaseContext(), "Could not add comment", Toast.LENGTH_LONG);
+            e.printStackTrace();
         }
     }
 }

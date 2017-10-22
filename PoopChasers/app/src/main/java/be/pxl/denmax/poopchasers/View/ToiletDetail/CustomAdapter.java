@@ -109,11 +109,12 @@ public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.O
     }
 
     private void setStars(ViewHolder viewHolder, ToiletComment tc){
-        for (int i = 0; i < tc.getRating(); i++) {
-            viewHolder.starImages.get(i).setVisibility(View.VISIBLE);
+        for(int i = 1; i<=tc.getRating(); i++){
+            viewHolder.starImages.get(i-1).setImageResource(R.drawable.starfull);
         }
-        for (int i = 5; i > tc.getRating(); i--) {
-            viewHolder.starImages.get(i-1).setVisibility(View.INVISIBLE);
+
+        for(int i = 5; i>tc.getRating(); i--){
+            viewHolder.starImages.get(i-1).setImageResource(R.drawable.starempty);
         }
     }
 

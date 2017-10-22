@@ -16,13 +16,13 @@ tools:context="be.pxl.denmax.poopchasers.View.MainActivity">
         tools:context="be.pxl.denmax.poopchasers.View.MapsActivity" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/addToiletButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
         android:onClick="filtertest"
         android:text="+"
         android:textColor="@android:color/white"

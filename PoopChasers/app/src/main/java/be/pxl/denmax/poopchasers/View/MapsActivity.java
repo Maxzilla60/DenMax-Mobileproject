@@ -83,8 +83,12 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     public void centerMapOnLocation(Location location){
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
+        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+        centerMapOnLocation(loc);
+    }
+
+    public void centerMapOnLocation(LatLng location){
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
     }
 
     public void filtertest(View view){
@@ -223,6 +227,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onPositiveAddToiletClick(Toilet toilet) {
         ToiletRepository.addToiletLocation(toilet);
         placeToiletsOnMap();
+        centerMapOnLocation(toilet.getLatLng());
     }
 
     @Override
