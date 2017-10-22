@@ -1,6 +1,8 @@
 package be.pxl.denmax.poopchasers.View;
 
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -44,7 +46,19 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(), MapsActivity.class);
         startActivity(intent);
 
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
-        // TODO
+        ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
+                .setShortLabel("Add Toilet")
+                .setLongLabel("Add a toilet to the map")
+                .setIntents(new Intent[]{
+                        new Intent(getBaseContext(), LoginActivity.class).setAction(""),
+                        new Intent(getBaseContext(), MapsActivity.class).setAction("ADD_TOILET")
+                })
+                .build();
+
+        shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+
+        // TODO: login
     }
 }
