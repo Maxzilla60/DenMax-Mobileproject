@@ -1,5 +1,8 @@
 package be.pxl.denmax.poopchasers.Model;
 
+import android.location.Location;
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -7,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 // Class representing a Toilet (location)
-public class Toilet {
+public class Toilet implements Comparable<LatLng> {
     private int id;
     private String name;
     private LatLng latlng;
@@ -43,6 +46,24 @@ public class Toilet {
             tags.addTag(tag);
         }
     }
+
+    public float distanceTo(Toilet otherToiler) {
+        return distanceTo(otherToiler.getLatLng());
+    }
+    public float distanceTo(LatLng otherLL) {
+        // Create respective location classes:
+        // This:
+        Location locationThis = new Location("");
+        locationThis.setLatitude(this.getLatLng().latitude);
+        locationThis.setLongitude(this.getLatLng().longitude);
+        // Other:
+        Location locationOther = new Location("");
+        locationOther.setLatitude(otherLL.latitude);
+        locationOther.setLongitude(otherLL.longitude);
+
+        return locationThis.distanceTo(locationOther);
+    }
+
     public void removeTag(ToiletTag tag) {
         tags.removeTag(tag);
     }
@@ -93,5 +114,8 @@ public class Toilet {
         return comments.getCommentsList();
     }
 
-
+    @Override
+    public int compareTo(@NonNull LatLng other) {
+        return (int) this.distanceTo(other);
+    }
 }
