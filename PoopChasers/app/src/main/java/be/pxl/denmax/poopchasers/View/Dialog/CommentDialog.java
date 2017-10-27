@@ -33,6 +33,7 @@ public class CommentDialog extends DialogFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         starImages = new ArrayList<>();
+        rating = 3;
     }
 
     @Override

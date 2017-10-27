@@ -60,6 +60,9 @@ public class MapsActivity extends FragmentActivity implements
         if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+
+                Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                centerMapOnLocation(lastKnownLoc);
                 mMap.setMyLocationEnabled(true);
             }
         }
@@ -78,8 +81,21 @@ public class MapsActivity extends FragmentActivity implements
 
         String action = getIntent() != null ? getIntent().getAction() : null;
         if ("ADD_TOILET".equals(action)) {
-            filtertest(null);
+            onAddToiletClick();
         }
+
+        findViewById(R.id.filterButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFilterClick();
+            }
+        });
+        findViewById(R.id.addToiletButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddToiletClick();
+            }
+        });
     }
 
     public void centerMapOnLocation(Location location){
@@ -91,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
     }
 
-    public void filtertest(View view){
+    public void onAddToiletClick(){
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
@@ -101,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    public void onFilterClick(View view) {
+    public void onFilterClick() {
         FilterDialog dialog = new FilterDialog();
         Bundle args = new Bundle();
         args.putSerializable("filter", filterTags);

@@ -66,8 +66,8 @@ public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.O
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.comment_row_item, parent, false);
 
-            viewHolder.nameTxt = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.profilepic = (ImageView) convertView.findViewById(R.id.profile_picture);
+            viewHolder.nameTxt = convertView.findViewById(R.id.name);
+            viewHolder.profilepic = convertView.findViewById(R.id.profile_picture);
             viewHolder.starImages = new ArrayList<>();
             viewHolder.starImages.add((ImageView) convertView.findViewById(R.id.star1));
             viewHolder.starImages.add((ImageView) convertView.findViewById(R.id.star2));
@@ -91,7 +91,7 @@ public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.O
         viewHolder.morelessTxt.setOnClickListener(this);
         viewHolder.morelessTxt.setTag(viewHolder);
 
-        return convertView;
+        return result;
     }
 
     private void setComment(ViewHolder viewHolder, ToiletComment toiletComment) {

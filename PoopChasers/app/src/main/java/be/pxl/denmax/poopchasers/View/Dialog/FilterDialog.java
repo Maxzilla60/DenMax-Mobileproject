@@ -63,7 +63,6 @@ public class FilterDialog extends DialogFragment {
                 .setPositiveButton(R.string.filter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.i("dialog", "filter");
                         listener.onPositiveFilterDialogClick(getToiletTags(view));
                     }
                 })
