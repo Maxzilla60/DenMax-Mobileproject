@@ -165,8 +165,8 @@ public class ToiletDetailActivity extends AppCompatActivity implements
     @Override
     public void onPositiveCommentClick(ToiletComment comment) {
         try {
-            ToiletRepository.addCommentToToiletLocation(comment, toilet.getId());
-            setComments(toilet.getComments());
+            ToiletRepository.addCommentToToiletLocation(Volley.newRequestQueue(this), comment, toilet.getId());
+            ToiletRepository.getToiletCommentsById(this, Volley.newRequestQueue(this), toilet.getId());
             setStars();
         } catch (ToiletLocationIDNotFoundException e) {
             Toast.makeText(getBaseContext(), "Could not add comment", Toast.LENGTH_LONG);

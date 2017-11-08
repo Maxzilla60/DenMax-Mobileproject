@@ -116,8 +116,37 @@ public class ToiletRepository {
         queue.add(stringRequest);
     }
 
-    public static void addCommentToToiletLocation(ToiletComment comment, int id) throws ToiletLocationIDNotFoundException {
-        //getToiletLocationByID(id).addComment(comment); TODO
+    public static void addCommentToToiletLocation(RequestQueue queue, ToiletComment comment, int id) throws ToiletLocationIDNotFoundException {
+        String url = "http://dennisheperol.be/comments/add";
+
+        final JSONObject obj = new JSONObject();
+        try {
+            obj.put("toiletid", id);
+            obj.put("rating", comment.getRating());
+            obj.put("comment", comment.getContent());
+            obj.put("user", comment.getUsername());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("test", "ResponsePost: " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("test", "ErrorPost: " + error);
+            }
+        }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return obj.toString().getBytes();
+            }
+        };
+        queue.add(stringRequest);
     }
 
     public static void addToiletLocation(RequestQueue queue, Toilet toilet){
