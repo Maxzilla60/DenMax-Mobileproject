@@ -15,6 +15,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -43,7 +46,8 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         OnMarkerClickListener,
         FilterDialog.FilterDialogListener,
-        AddToiletDialog.AddToiletListener {
+        AddToiletDialog.AddToiletListener,
+        ToiletRepository.ToiletUpdateListener {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
@@ -198,17 +202,10 @@ public class MapsActivity extends FragmentActivity implements
      * Places all toilets on the map based on filter settings
      */
     private void placeToiletsOnMap(){
-        List<Toilet> toiletList;
         if(!hasFilter()) {
-            toiletList = ToiletRepository.getAllToiletLocations();
+            ToiletRepository.getAllToiletLocations(this, Volley.newRequestQueue(this));
         } else {
-            toiletList = ToiletRepository.getToiletLocationsByTags(filterTags.toArray(new ToiletTag[0]));
-        }
-
-        mMap.clear();
-        for (Toilet toilet: toiletList) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
-            marker.setTag(toilet.getId());
+            ToiletRepository.getToiletLocationsByTags(this, Volley.newRequestQueue(this), filterTags.toArray(new ToiletTag[0]));
         }
     }
 
@@ -241,7 +238,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onPositiveAddToiletClick(Toilet toilet) {
-        ToiletRepository.addToiletLocation(toilet);
+        ToiletRepository.addToiletLocation(Volley.newRequestQueue(this), toilet);
         placeToiletsOnMap();
         centerMapOnLocation(toilet.getLatLng());
     }
@@ -258,6 +255,15 @@ public class MapsActivity extends FragmentActivity implements
                 dialog.setArguments(args);
                 dialog.show(getFragmentManager(), "");
             }
+        }
+    }
+
+    @Override
+    public void onToiletUpdate(List<Toilet> toiletList) {
+        mMap.clear();
+        for (Toilet toilet: toiletList) {
+            Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
+            marker.setTag(toilet.getId());
         }
     }
 }

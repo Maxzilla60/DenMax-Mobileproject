@@ -21,6 +21,9 @@ public class Toilet implements Comparable<LatLng> {
     public Toilet(int id, String name, double latitude, double longitude) {
         this(id, name, latitude, longitude, new ToiletTags(), new ToiletCommentsList());
     }
+    public Toilet(int id, String name, double latitude, double longitude, ToiletTags tags) {
+        this(id, name, latitude, longitude, tags, new ToiletCommentsList());
+    }
     public Toilet(int id, String name, double latitude, double longitude, ToiletTags tags, ToiletCommentsList comments) {
         this.id = id;
         this.name = name;
@@ -92,6 +95,8 @@ public class Toilet implements Comparable<LatLng> {
     public HashMap<ToiletTag, Boolean> getTags() {
         return tags.getTags();
     }
+
+    public ToiletTags getToiletTags() {return this.tags;}
 
     public int getId() {
         return id;

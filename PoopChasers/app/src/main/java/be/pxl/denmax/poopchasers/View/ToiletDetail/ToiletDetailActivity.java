@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -30,7 +32,10 @@ import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
 import be.pxl.denmax.poopchasers.View.Dialog.CommentDialog;
 
 
-public class ToiletDetailActivity extends AppCompatActivity implements CommentDialog.CommentListener{
+public class ToiletDetailActivity extends AppCompatActivity implements
+        CommentDialog.CommentListener,
+        ToiletRepository.ToiletUpdateListener,
+        ToiletRepository.ToiletCommentUpdateListener{
     private Toilet toilet;
     private ArrayList<ImageView> starImages;
 
@@ -49,20 +54,8 @@ public class ToiletDetailActivity extends AppCompatActivity implements CommentDi
         starImages.add((ImageView) findViewById(R.id.star5));
 
 
-        try {
-            toilet = ToiletRepository.getToiletLocationByID(id);
-            setToiletName();
-            setLocationName();
-            setStars();
-            setTags();
-            setDirections();
-            setAddComment();
-            setComments(toilet.getComments());
-
-
-        } catch (ToiletLocationIDNotFoundException e) {
-            e.printStackTrace();
-        }
+        ToiletRepository.getToiletLocationByID(this, Volley.newRequestQueue(this), id);
+        ToiletRepository.getToiletCommentsById(this, Volley.newRequestQueue(this), id);
     }
 
     private void setAddComment() {
@@ -179,5 +172,28 @@ public class ToiletDetailActivity extends AppCompatActivity implements CommentDi
             Toast.makeText(getBaseContext(), "Could not add comment", Toast.LENGTH_LONG);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onToiletUpdate(List<Toilet> toilets) {
+        Log.i("test", "inOnToiletUpdate");
+        if(toilets.size() > 0){
+            Log.i("test", "size > 0");
+            this.toilet = toilets.get(0);
+            setToiletName();
+            setLocationName();
+            setStars();
+            setTags();
+            setDirections();
+        } else {
+            this.finish();
+        }
+    }
+
+    @Override
+    public void onToiletCommentUpdate(ArrayList<ToiletComment> toiletComments) {
+        Log.i("test", "inOnToiletCommentUpdate");
+        setAddComment();
+        setComments(toiletComments);
     }
 }
