@@ -15,10 +15,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -35,9 +34,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import be.pxl.denmax.poopchasers.Model.Toilet;
+import be.pxl.denmax.poopchasers.Model.ToiletAndDistance;
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
@@ -45,6 +46,7 @@ import be.pxl.denmax.poopchasers.Storage.PreferenceStorage;
 import be.pxl.denmax.poopchasers.View.Dialog.AddToiletDialog;
 import be.pxl.denmax.poopchasers.View.Dialog.FilterDialog;
 import be.pxl.denmax.poopchasers.View.ToiletDetail.ToiletDetailActivity;
+import be.pxl.denmax.poopchasers.View.ToiletList.ToiletListActivity;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -57,9 +59,12 @@ public class MapsActivity extends FragmentActivity implements
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private boolean canAccessLocation;
+
     private static final int ADD_TOILET_REQUEST = 1;
 
     private ArrayList<ToiletTag> filterTags;
+    private List<Toilet> currentToiletList;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -67,11 +72,7 @@ public class MapsActivity extends FragmentActivity implements
 
         if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
-
-                Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                centerMapOnLocation(lastKnownLoc);
-                mMap.setMyLocationEnabled(true);
+                onCanAccessLocation();
             }
         }
     }
@@ -84,6 +85,10 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        this.canAccessLocation = false;
+
+        currentToiletList = new ArrayList<>();
 
         filterTags = (ArrayList<ToiletTag>) getIntent().getSerializableExtra("filter");
 
@@ -110,8 +115,53 @@ public class MapsActivity extends FragmentActivity implements
                 logout();
             }
         });
+        findViewById(R.id.list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onToiletListClick();
+            }
+        });
 
         checkLogin();
+    }
+
+    private ArrayList<ToiletAndDistance> getSortedToiletDistanceList(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            ArrayList<ToiletAndDistance> toiletDistanceList = new ArrayList<>();
+            Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LatLng lastLatLng = new LatLng(lastKnownLoc.getLatitude(), lastKnownLoc.getLongitude());
+
+            for (Toilet toilet : currentToiletList) {
+                toiletDistanceList.add(new ToiletAndDistance(toilet, lastLatLng));
+            }
+
+            Collections.sort(toiletDistanceList);
+
+            return toiletDistanceList;
+        }
+        return null;
+    }
+
+    private void onToiletListClick() {
+        ArrayList<ToiletAndDistance> toiletDistanceList = getSortedToiletDistanceList();
+
+        if(toiletDistanceList != null){
+            ArrayList<Integer> ids = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<Integer> distances = new ArrayList<>();
+
+            for(ToiletAndDistance toiletDistance: toiletDistanceList){
+                ids.add(toiletDistance.getToilet().getId());
+                names.add(toiletDistance.getToilet().getName());
+                distances.add(Math.round(toiletDistance.getDistance()));
+            }
+
+            Intent intent = new Intent(getBaseContext(), ToiletListActivity.class);
+            intent.putIntegerArrayListExtra("ids", ids);
+            intent.putStringArrayListExtra("names", names);
+            intent.putIntegerArrayListExtra("distances", distances);
+            startActivity(intent);
+        }
     }
 
     private void logout() {
@@ -137,12 +187,52 @@ public class MapsActivity extends FragmentActivity implements
                     .setShortLabel("Add Toilet")
                     .setLongLabel("Add a toilet to the map")
                     .setIntents(new Intent[]{
-                            new Intent(getBaseContext(), LoginActivity.class).setAction(""),
                             new Intent(getBaseContext(), MapsActivity.class).setAction("ADD_TOILET")
                     })
                     .build();
 
-            shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+            shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
+        }
+    }
+
+    private void onCanAccessLocation(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+
+            Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastKnownLoc != null)
+                centerMapOnLocation(lastKnownLoc);
+
+            mMap.setMyLocationEnabled(true);
+            findViewById(R.id.list).setVisibility(View.VISIBLE);
+            addEmergencyShortcut();
+
+            this.canAccessLocation = true;
+        }
+    }
+
+    private void addEmergencyShortcut(){
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+        ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id2")
+                .setShortLabel("EMERGENCY")
+                .setLongLabel("Find nearest toilet!")
+                .setIntents(new Intent[]{
+                        new Intent(getBaseContext(), MapsActivity.class).setAction("EMERGENCY")
+                })
+                .build();
+
+        shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
+    }
+
+    private void emergency(){
+        ArrayList<ToiletAndDistance> toiletDistanceList = getSortedToiletDistanceList();
+        Log.i("test","passed " + toiletDistanceList.size());
+
+        if(toiletDistanceList != null && toiletDistanceList.size() >= 1) {
+            Intent intent = new Intent(getBaseContext(), ToiletDetailActivity.class);
+            intent.putExtra("id", toiletDistanceList.get(0).getToilet().getId());
+            intent.setAction("EMERGENCY");
+            startActivity(intent);
         }
     }
 
@@ -226,16 +316,10 @@ public class MapsActivity extends FragmentActivity implements
 
         // Check if we have permission to get the device's location
         if(Build.VERSION.SDK_INT < 23) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
-            mMap.setMyLocationEnabled(true);
+            onCanAccessLocation();
         } else {
-
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
-
-                Location lastKnownLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                centerMapOnLocation(lastKnownLoc);
-                mMap.setMyLocationEnabled(true);
+                onCanAccessLocation();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
@@ -304,10 +388,17 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onToiletUpdate(List<Toilet> toiletList) {
+        this.currentToiletList = toiletList;
         mMap.clear();
         for (Toilet toilet: toiletList) {
             Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
             marker.setTag(toilet.getId());
+        }
+
+        String action = getIntent() != null ? getIntent().getAction() : null;
+        if (canAccessLocation && "EMERGENCY".equals(action)) {
+            emergency();
+            finish();
         }
     }
 

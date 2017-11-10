@@ -36,6 +36,7 @@ public class ToiletDetailActivity extends AppCompatActivity implements
         CommentDialog.CommentListener,
         ToiletRepository.ToiletUpdateListener,
         ToiletRepository.ToiletCommentUpdateListener{
+
     private Toilet toilet;
     private ArrayList<ImageView> starImages;
 
@@ -77,29 +78,33 @@ public class ToiletDetailActivity extends AppCompatActivity implements
     }
 
     private void setDirections() {
-        final Toilet t = toilet;
-
         findViewById(R.id.directionsButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LatLng latLng = t.getLatLng();
-
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude+"&mode=w");
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-
-                // Check if intent can be resolved
-                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                } else {
-                    Toast.makeText(getBaseContext(), "Could not find Google Maps application", Toast.LENGTH_LONG).show();
-                }
+                openDirections();
             }
         });
     }
 
+    private void openDirections(){
+        final Toilet t = toilet;
+
+        LatLng latLng = t.getLatLng();
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+latLng.latitude+","+latLng.longitude+"&mode=w");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Check if intent can be resolved
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Toast.makeText(getBaseContext(), "Could not find Google Maps application", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void setComments(ArrayList<ToiletComment> comments) {
-        CustomAdapter adapter = new CustomAdapter(comments, getApplicationContext());
+        ToiletDetailAdapter adapter = new ToiletDetailAdapter(comments, getApplicationContext());
         ListView listView = (ListView) findViewById(R.id.comments);
 
         listView.setAdapter(adapter);
@@ -191,6 +196,11 @@ public class ToiletDetailActivity extends AppCompatActivity implements
             setDirections();
         } else {
             this.finish();
+        }
+
+        String action = getIntent() != null ? getIntent().getAction() : null;
+        if ("EMERGENCY".equals(action)) {
+            openDirections();
         }
     }
 

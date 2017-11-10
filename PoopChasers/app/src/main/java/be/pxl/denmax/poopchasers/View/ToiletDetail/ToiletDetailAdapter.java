@@ -3,13 +3,11 @@ package be.pxl.denmax.poopchasers.View.ToiletDetail;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import be.pxl.denmax.poopchasers.R;
  * Created by dennis on 20.10.17.
  */
 
-public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.OnClickListener {
+public class ToiletDetailAdapter extends ArrayAdapter<ToiletComment> implements View.OnClickListener {
 
     private ArrayList<ToiletComment> dataSet;
     Context mContext;
@@ -36,7 +34,7 @@ public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.O
         boolean expanded;
     }
 
-    public CustomAdapter(ArrayList<ToiletComment> data, Context context) {
+    public ToiletDetailAdapter(ArrayList<ToiletComment> data, Context context) {
         super(context, R.layout.comment_row_item, data);
         this.dataSet = data;
         this.mContext = context;
@@ -74,7 +72,7 @@ public class CustomAdapter extends ArrayAdapter<ToiletComment> implements View.O
             viewHolder.starImages.add((ImageView) convertView.findViewById(R.id.star3));
             viewHolder.starImages.add((ImageView) convertView.findViewById(R.id.star4));
             viewHolder.starImages.add((ImageView) convertView.findViewById(R.id.star5));
-            viewHolder.commentTxt = (TextView) convertView.findViewById(R.id.comment);
+            viewHolder.commentTxt = (TextView) convertView.findViewById(R.id.distance);
             viewHolder.morelessTxt = (TextView) convertView.findViewById(R.id.moreless);
 
             result = convertView;

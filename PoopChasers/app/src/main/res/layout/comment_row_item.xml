@@ -95,7 +95,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/distance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="4"
@@ -109,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/comment"
+        android:layout_below="@+id/distance"
         android:text="show more"
         android:textColor="@color/colorBlue" />
 
