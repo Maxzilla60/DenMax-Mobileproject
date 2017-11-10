@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,12 +34,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import be.pxl.denmax.poopchasers.Model.Toilet;
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+import be.pxl.denmax.poopchasers.Storage.PreferenceStorage;
 import be.pxl.denmax.poopchasers.View.Dialog.AddToiletDialog;
 import be.pxl.denmax.poopchasers.View.Dialog.FilterDialog;
 import be.pxl.denmax.poopchasers.View.ToiletDetail.ToiletDetailActivity;
@@ -100,6 +104,46 @@ public class MapsActivity extends FragmentActivity implements
                 onAddToiletClick();
             }
         });
+        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
+
+        checkLogin();
+    }
+
+    private void logout() {
+        PreferenceStorage.setUserName(this, null);
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void checkLogin() {
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+
+        if(PreferenceStorage.getUsername(this) == null){
+            findViewById(R.id.addToiletButton).setVisibility(View.GONE);
+            findViewById(R.id.logout).setVisibility(View.GONE);
+
+            List<String> shortcutList = new ArrayList<>();
+            shortcutList.add("id1");
+            shortcutManager.disableShortcuts(shortcutList);
+        } else {
+            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
+                    .setShortLabel("Add Toilet")
+                    .setLongLabel("Add a toilet to the map")
+                    .setIntents(new Intent[]{
+                            new Intent(getBaseContext(), LoginActivity.class).setAction(""),
+                            new Intent(getBaseContext(), MapsActivity.class).setAction("ADD_TOILET")
+                    })
+                    .build();
+
+            shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+        }
     }
 
     public void centerMapOnLocation(Location location){
@@ -238,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onPositiveAddToiletClick(Toilet toilet) {
-        ToiletRepository.addToiletLocation(Volley.newRequestQueue(this), toilet);
+        ToiletRepository.addToiletLocation(this, Volley.newRequestQueue(this), toilet);
         placeToiletsOnMap();
         centerMapOnLocation(toilet.getLatLng());
     }
@@ -265,5 +309,10 @@ public class MapsActivity extends FragmentActivity implements
             Marker marker = mMap.addMarker(new MarkerOptions().position(toilet.getLatLng()).title(" + " + toilet.getName()));
             marker.setTag(toilet.getId());
         }
+    }
+
+    @Override
+    public void onToiletAdded() {
+        placeToiletsOnMap();
     }
 }

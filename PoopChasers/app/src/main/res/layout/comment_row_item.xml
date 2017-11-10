@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:maxWidth="75dp"
-        android:text="Dennis Heperol"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
@@ -40,7 +39,7 @@
                 android:layout_centerHorizontal="true"
                 android:maxHeight="20dp"
                 android:maxWidth="20dp"
-                android:src="@drawable/filter" />
+                android:src="@drawable/default_avatar" />
         </RelativeLayout>
 
         <RelativeLayout

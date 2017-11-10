@@ -8,9 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +24,11 @@ import java.util.Locale;
 import be.pxl.denmax.poopchasers.Exceptions.ToiletLocationIDNotFoundException;
 import be.pxl.denmax.poopchasers.Model.Toilet;
 import be.pxl.denmax.poopchasers.Model.ToiletComment;
+import be.pxl.denmax.poopchasers.Model.ToiletCommentsList;
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
 import be.pxl.denmax.poopchasers.Repo.ToiletRepository;
+import be.pxl.denmax.poopchasers.Storage.PreferenceStorage;
 import be.pxl.denmax.poopchasers.View.Dialog.CommentDialog;
 
 
@@ -56,6 +56,14 @@ public class ToiletDetailActivity extends AppCompatActivity implements
 
         ToiletRepository.getToiletLocationByID(this, Volley.newRequestQueue(this), id);
         ToiletRepository.getToiletCommentsById(this, Volley.newRequestQueue(this), id);
+
+        checklogin();
+    }
+
+    private void checklogin() {
+        if(PreferenceStorage.getUsername(this) == null){
+            findViewById(R.id.addCommentButton).setVisibility(View.GONE);
+        }
     }
 
     private void setAddComment() {
@@ -127,8 +135,7 @@ public class ToiletDetailActivity extends AppCompatActivity implements
         }
     }
 
-    private void setStars() {
-        int rating = toilet.getRating();
+    private void setStars(int rating) {
 
         for(int i = 1; i<=rating; i++){
             starImages.get(i-1).setImageResource(R.drawable.starfull);
@@ -165,9 +172,7 @@ public class ToiletDetailActivity extends AppCompatActivity implements
     @Override
     public void onPositiveCommentClick(ToiletComment comment) {
         try {
-            ToiletRepository.addCommentToToiletLocation(Volley.newRequestQueue(this), comment, toilet.getId());
-            ToiletRepository.getToiletCommentsById(this, Volley.newRequestQueue(this), toilet.getId());
-            setStars();
+            ToiletRepository.addCommentToToiletLocation(this, Volley.newRequestQueue(this), comment, toilet.getId());
         } catch (ToiletLocationIDNotFoundException e) {
             Toast.makeText(getBaseContext(), "Could not add comment", Toast.LENGTH_LONG);
             e.printStackTrace();
@@ -182,7 +187,6 @@ public class ToiletDetailActivity extends AppCompatActivity implements
             this.toilet = toilets.get(0);
             setToiletName();
             setLocationName();
-            setStars();
             setTags();
             setDirections();
         } else {
@@ -191,9 +195,21 @@ public class ToiletDetailActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onToiletAdded() {}
+
+    @Override
     public void onToiletCommentUpdate(ArrayList<ToiletComment> toiletComments) {
-        Log.i("test", "inOnToiletCommentUpdate");
+        ToiletCommentsList tcList = new ToiletCommentsList();
+        for(ToiletComment comment : toiletComments) {
+            tcList.add(comment);
+        }
+        setStars(tcList.getAverageRating());
         setAddComment();
         setComments(toiletComments);
+    }
+
+    @Override
+    public void onToiletCommentAdded() {
+        ToiletRepository.getToiletCommentsById(this, Volley.newRequestQueue(this), toilet.getId());
     }
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import be.pxl.denmax.poopchasers.Model.ToiletComment;
 import be.pxl.denmax.poopchasers.R;
+import be.pxl.denmax.poopchasers.Storage.PreferenceStorage;
 
 /**
  * Created by dennis on 22.10.17.
@@ -132,7 +133,8 @@ public class CommentDialog extends DialogFragment{
 
     private ToiletComment getComment(View view) {
         String content = ((TextView) view.findViewById(R.id.commentText)).getText().toString();
+        String username = PreferenceStorage.getUsername(getContext());
 
-        return new ToiletComment(content, "_username_", rating);
+        return new ToiletComment(content, username, rating);
     }
 }

@@ -5,6 +5,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 
 import be.pxl.denmax.poopchasers.Model.ToiletTag;
 import be.pxl.denmax.poopchasers.R;
+import be.pxl.denmax.poopchasers.Storage.PreferenceStorage;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,6 +34,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        final Button skip = (Button) findViewById(R.id.skipButton);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                skipLogin();
+            }
+        });
+
     }
 
     private void login(){
@@ -41,24 +51,16 @@ public class LoginActivity extends AppCompatActivity {
         String username = nameEdit.getText().toString();
         String password = passEdit.getText().toString();
 
-        Toast.makeText(getBaseContext(), username + " - " + password, Toast.LENGTH_LONG).show();
+        PreferenceStorage.setUserName(this, username);
 
         Intent intent = new Intent(getBaseContext(), MapsActivity.class);
         startActivity(intent);
+        finish();
+    }
 
-        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-
-        ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
-                .setShortLabel("Add Toilet")
-                .setLongLabel("Add a toilet to the map")
-                .setIntents(new Intent[]{
-                        new Intent(getBaseContext(), LoginActivity.class).setAction(""),
-                        new Intent(getBaseContext(), MapsActivity.class).setAction("ADD_TOILET")
-                })
-                .build();
-
-        shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
-
-        // TODO: login
+    private void skipLogin(){
+        Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

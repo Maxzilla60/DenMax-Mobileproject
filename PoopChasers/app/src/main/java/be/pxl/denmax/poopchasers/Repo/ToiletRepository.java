@@ -53,10 +53,12 @@ public class ToiletRepository {
 
     public interface ToiletUpdateListener {
         void onToiletUpdate(List<Toilet> toilets);
+        void onToiletAdded();
     }
 
     public interface ToiletCommentUpdateListener {
         void onToiletCommentUpdate(ArrayList<ToiletComment> toiletComments);
+        void onToiletCommentAdded();
     }
 
 //    public static List<Toilet> getAllToiletLocations() {
@@ -89,8 +91,8 @@ public class ToiletRepository {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.i("test", url);
-                            Log.i("test", response);
+                            //Log.i("test", url);
+                            //Log.i("test", response);
                             JSONArray arr = new JSONArray(response);
                             List<Toilet> toiletList= new ArrayList<>();
                             for(int i = 0; i<arr.length(); i++) {
@@ -110,13 +112,13 @@ public class ToiletRepository {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("test", "ErrorResponse");
+                //Log.i("test", "ErrorResponse");
             }
         });
         queue.add(stringRequest);
     }
 
-    public static void addCommentToToiletLocation(RequestQueue queue, ToiletComment comment, int id) throws ToiletLocationIDNotFoundException {
+    public static void addCommentToToiletLocation(final ToiletCommentUpdateListener listener, RequestQueue queue, ToiletComment comment, int id) throws ToiletLocationIDNotFoundException {
         String url = "http://dennisheperol.be/comments/add";
 
         final JSONObject obj = new JSONObject();
@@ -133,12 +135,13 @@ public class ToiletRepository {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("test", "ResponsePost: " + response);
+                        listener.onToiletCommentAdded();
+                        //Log.i("test", "ResponsePost: " + response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("test", "ErrorPost: " + error);
+                //Log.i("test", "ErrorPost: " + error);
             }
         }){
             @Override
@@ -149,7 +152,7 @@ public class ToiletRepository {
         queue.add(stringRequest);
     }
 
-    public static void addToiletLocation(RequestQueue queue, Toilet toilet){
+    public static void addToiletLocation(final ToiletUpdateListener listener, RequestQueue queue, Toilet toilet){
         String url = "http://dennisheperol.be/toilets/add";
 
         final JSONObject obj = new JSONObject();
@@ -168,12 +171,13 @@ public class ToiletRepository {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("test", "ResponsePost: " + response);
+                        listener.onToiletAdded();
+                        //Log.i("test", "ResponsePost: " + response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("test", "ErrorPost: " + error);
+                //Log.i("test", "ErrorPost: " + error);
             }
         }){
             @Override
@@ -235,7 +239,7 @@ public class ToiletRepository {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("test", "ErrorResponse");
+                //Log.i("test", "ErrorResponse");
             }
         });
         queue.add(stringRequest);
@@ -280,7 +284,7 @@ public class ToiletRepository {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("test", "ErrorResponse");
+                //Log.i("test", "ErrorResponse");
             }
         });
         queue.add(stringRequest);

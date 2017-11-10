@@ -5,4 +5,6 @@
     <string name="cancel">Cancel</string>
     <string name="addToilet">Add Toilet</string>
     <string name="addComment">Add Comment</string>
+
+    <string name="user_preference_file">user_storage</string>
 </resources>
